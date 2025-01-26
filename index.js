@@ -4,23 +4,24 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const app = express();
 const connectToDatabase = require("./DataBaseConnection/dataBase");
-const authRoutes = require("./routes/authRoutes");
-const userRoutes = require("./routes/userRoutes");
+const userRouter = require("./routes/userRoutes");
+const shopRouter = require("./routes/shopRoutes");
 
-app.use(cors);
+app.use(cors()); // Fix the CORS middleware usage
+app.use(express.json()); // Add middleware to parse JSON
 
 // Connect to MongoDB
 connectToDatabase();
-
-app.use("/auth", authRoutes);
-app.use("/user", userRoutes);
 
 app.get("/", (req, res) => {
   console.log("Hello World");
   res.send("Hello World");
 });
 
-const PORT = process.env.PORT || 3000;
+app.use("/user", userRouter); // Use the user router for user-related routes
+app.use("/shop", shopRouter); // Use the shop router for shop-related routes
+
+const PORT = process.env.PORT || 3001; // Ensure the port is 3001
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
